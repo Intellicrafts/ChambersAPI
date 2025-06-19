@@ -11,6 +11,7 @@ use App\Http\Controllers\API\AppointmentController;
 use App\Http\Controllers\API\LawyerController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\NotificationController;
+use App\Http\Controllers\API\LawyerAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -216,6 +217,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/{id}/read', [NotificationController::class, 'markAsRead']);
         Route::post('/{id}/unread', [NotificationController::class, 'markAsUnread']);
     });
+
+
+       Route::prefix('lawyer_admin')->group(function () {
+        Route::get('/{id}', [LawyerAdminController::class, 'index']);
+    });
+
+    
 
 
 });

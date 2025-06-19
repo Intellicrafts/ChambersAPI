@@ -52,5 +52,28 @@ class DatabaseSeeder extends Seeder
                 return User::inRandomOrder()->first()->id;
             }
         ]);
+        $this->call([
+        LawyersCaseSeeder::class,
+        // other seeders
+    ]);
+
+        // Create appointments
+        Appointment::factory(20)->create([
+            'lawyer_id' => function() {
+                return Lawyer::inRandomOrder()->first()->id;
+            },
+            'user_id' => function() {
+                return User::inRandomOrder()->first()->id;
+            }
+        ]);
+        
+        // Create contacts
+        Contact::factory(15)->create([
+            'user_id' => function() {
+                return User::inRandomOrder()->first()->id;
+            }
+        ]);
+        
+        
     }
 }
