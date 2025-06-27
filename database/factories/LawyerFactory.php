@@ -23,7 +23,7 @@ class LawyerFactory extends Factory
         ];
         
         return [
-            'id' => fake()->uuid(),
+            'id' => \Illuminate\Support\Str::uuid()->toString(),
             'full_name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'phone_number' => fake()->phoneNumber(),

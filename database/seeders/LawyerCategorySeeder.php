@@ -20,11 +20,14 @@ class LawyerCategorySeeder extends Seeder
         ];
         
         foreach ($categories as $category) {
-            \App\Models\LawyerCategory::create([
-                'id' => \Illuminate\Support\Str::uuid(),
-                'category_name' => $category,
-                'lawyer_id' => null
-            ]);
+            // Check if category already exists
+            if (!\App\Models\LawyerCategory::where('category_name', $category)->exists()) {
+                \App\Models\LawyerCategory::create([
+                    'id' => \Illuminate\Support\Str::uuid(),
+                    'category_name' => $category,
+                    'lawyer_id' => null
+                ]);
+            }
         }
     }
 }

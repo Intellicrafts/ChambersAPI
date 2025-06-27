@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Appointment extends Model
 {
@@ -18,6 +19,17 @@ class Appointment extends Model
         'status',
         'meeting_link'
     ];
+
+     protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->id)) {
+                $model->id = (string) Str::uuid();
+            }
+        });
+    }
 
     protected function casts(): array
     {
@@ -134,5 +146,25 @@ class Appointment extends Model
     {
         return $this->status === self::STATUS_SCHEDULED && 
                $this->appointment_time->isFuture();
+    }
+
+    /**
+     * Can be marked as completed
+     */
+    public function canBeCompleted(): bool
+    {
+        return $this->status === self::STATUS_IN_PROGRESS ||
+               ($this->status === self::STATUS_SCHEDULED && $this->appointment_time->isPast());
+    }
+
+     public static function getStatuses(): array
+    {
+        return [
+            self::STATUS_SCHEDULED,
+            self::STATUS_COMPLETED,
+            self::STATUS_CANCELLED,
+            self::STATUS_NO_SHOW,
+            self::STATUS_IN_PROGRESS,
+        ];
     }
 }

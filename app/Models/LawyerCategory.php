@@ -39,4 +39,12 @@ class LawyerCategory extends Model
     {
         return $query->where('category_name', 'LIKE', "%{$term}%");
     }
+    
+    /**
+     * Get cases in this category
+     */
+    public function cases(): HasMany
+    {
+        return $this->hasMany(LawyerCase::class, 'category_id');
+    }
 }

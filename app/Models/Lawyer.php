@@ -76,6 +76,14 @@ class Lawyer extends Model
     {
         return $this->hasMany(LawyerCategory::class);
     }
+    
+    /**
+     * Get lawyer's cases
+     */
+    public function cases(): HasMany
+    {
+        return $this->hasMany(LawyerCase::class);
+    }
 
     /**
      * Scope for active lawyers

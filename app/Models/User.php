@@ -93,6 +93,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(LegalQuery::class);
     }
+    
+    /**
+     * Get user's cases
+     */
+    public function cases(): HasMany
+    {
+        return $this->hasMany(LawyerCase::class);
+    }
 
     /**
      * Scope for active users
@@ -137,7 +145,24 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getAvatarUrlAttribute(): string
     {
-        return asset('storage/avatars/' . $this->avatar);
+        // Get the base URL without any api prefix
+        $baseUrl = url('/');
+        
+        if (!$this->avatar) {
+            return $baseUrl . '/storage/avatars/default-avatar.png';
+        }
+        
+        // Handle URLs directly
+        if (str_starts_with($this->avatar, 'http')) {
+            return $this->avatar;
+        }
+        
+        // Handle both storage formats
+        if (str_starts_with($this->avatar, 'avatars/')) {
+            return $baseUrl . '/storage/' . $this->avatar;
+        } else {
+            return $baseUrl . '/storage/avatars/' . $this->avatar;
+        }
     }
 
     /**

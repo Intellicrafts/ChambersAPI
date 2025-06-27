@@ -68,8 +68,8 @@ class AppointmentController extends Controller
     {
         try {
             $validated = $request->validate([
-                'user_id' => 'required|uuid|exists:users,id',
-                'lawyer_id' => 'required|uuid|exists:lawyers,id',
+                'user_id' => 'required|integer|exists:users,id',
+                'lawyer_id' => 'required|integer|exists:lawyers,id',
                 'appointment_time' => 'required|date|after:now',
                 'duration_minutes' => 'required|integer|min:15|max:240',
                 'status' => 'sometimes|string|in:' . implode(',', Appointment::getStatuses()),

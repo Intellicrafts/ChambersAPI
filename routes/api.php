@@ -12,6 +12,7 @@ use App\Http\Controllers\API\LawyerController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\LawyerAdminController;
+use App\Http\Controllers\API\LawyerCaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,11 @@ Route::get('/sanctum/csrf-cookie', function () {
     return response()->json(['message' => 'CSRF cookie set']);
 })->middleware('web');
 
+// Direct avatar upload routes for compatibility with frontend
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/update-avatar', [UserController::class, 'updateAvatar']);
+    Route::post('/avatar', [UserController::class, 'updateAvatar']);
+});
 
 // USER ROUTES
 
@@ -70,6 +76,32 @@ Route::apiResource('contacts', ContactController::class);
 
 Route::middleware('auth:sanctum')->group(function () {
     
+    /*
+    |--------------------------------------------------------------------------
+    | USER PROFILE ROUTES
+    |--------------------------------------------------------------------------
+    | Routes for managing user profile
+    | Base URL: /api/user
+    */
+    
+    Route::prefix('user')->name('user.')->group(function () {
+        // Profile management
+        Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+        Route::put('/profile', [UserController::class, 'updateProfile'])->name('update-profile');
+        
+        // Password management
+        Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password');
+        
+        // Avatar management - multiple endpoints for compatibility
+        Route::post('/avatar', [UserController::class, 'updateAvatar'])->name('avatar');
+        Route::post('/update-avatar', [UserController::class, 'updateAvatar'])->name('update-avatar');
+        Route::post('/{user}/avatar', [UserController::class, 'updateAvatar'])->name('user-avatar');
+        
+        // Get user by ID - must be last to avoid conflicts with other routes
+        Route::get('/{user}', [UserController::class, 'show'])->name('show');
+
+    });
+
     /*
     |--------------------------------------------------------------------------
     | AVAILABILITY SLOT ROUTES
@@ -223,7 +255,26 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{id}', [LawyerAdminController::class, 'index']);
     });
 
+    /*
+    |--------------------------------------------------------------------------
+    | LAWYER CASES ROUTES
+    |--------------------------------------------------------------------------
+    | Routes for managing lawyer cases
+    | Base URL: /api/lawyer-cases
+    */
     
+    Route::prefix('lawyer-cases')->name('lawyer-cases.')->group(function () {
+        // Standard CRUD Operations
+        Route::get('/', [LawyerCaseController::class, 'index'])->name('index');
+        Route::post('/', [LawyerCaseController::class, 'store'])->name('store');
+        Route::get('/{id}', [LawyerCaseController::class, 'show'])->name('show');
+        Route::put('/{id}', [LawyerCaseController::class, 'update'])->name('update');
+        Route::delete('/{id}', [LawyerCaseController::class, 'destroy'])->name('destroy');
+        
+        // Query Operations
+        Route::get('/lawyer/{lawyerId}', [LawyerCaseController::class, 'getCasesByLawyer'])->name('by-lawyer');
+        Route::get('/category/{categoryId}', [LawyerCaseController::class, 'getCasesByCategory'])->name('by-category');
+    });
 
 
 });

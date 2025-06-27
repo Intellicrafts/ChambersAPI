@@ -11,9 +11,11 @@ class CreateLawyersCasesTable extends Migration
         Schema::create('lawyers_cases', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('lawyer_id')->constrained()->onDelete('cascade');
+            $table->uuid('lawyer_id');
+            $table->foreign('lawyer_id')->references('id')->on('lawyers')->onDelete('cascade');
             $table->string('casename');
-            $table->foreignId('category_id')->constrained('lawyers_categories')->onDelete('cascade');
+            $table->uuid('category_id');
+            $table->foreign('category_id')->references('id')->on('lawyer_categories')->onDelete('cascade');
             $table->timestamps(); // includes created_at and updated_at
         });
     }
@@ -23,3 +25,4 @@ class CreateLawyersCasesTable extends Migration
         Schema::dropIfExists('lawyers_cases');
     }
 }
+
