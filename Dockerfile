@@ -47,9 +47,8 @@ ENV APACHE_LOG_DIR=/var/log/apache2
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# Update composer.lock and install dependencies with increased memory limit
-RUN php -d memory_limit=-1 /usr/bin/composer update --no-interaction && \
-    php -d memory_limit=-1 /usr/bin/composer install --no-dev --optimize-autoloader --no-interaction
+# Install dependencies with increased memory limit
+RUN php -d memory_limit=-1 /usr/bin/composer install --no-dev --optimize-autoloader --no-interaction
 
 # Generate application key if not exists
 RUN php artisan key:generate --force
