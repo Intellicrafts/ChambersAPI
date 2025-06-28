@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\API\ContactController;
@@ -14,31 +13,6 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\LawyerAdminController;
 use App\Http\Controllers\API\LawyerCaseController;
-
-/*
-|--------------------------------------------------------------------------
-| HEALTH CHECK & SYSTEM ROUTES
-|--------------------------------------------------------------------------
-*/
-
-// Health check endpoint for Cloud Run
-Route::get('/health', function () {
-    try {
-        // Check database connection
-        DB::connection()->getPdo();
-        $dbStatus = true;
-    } catch (\Exception $e) {
-        $dbStatus = false;
-    }
-
-    return response()->json([
-        'status' => 'ok',
-        'timestamp' => now()->toIso8601String(),
-        'environment' => app()->environment(),
-        'database' => $dbStatus ? 'connected' : 'disconnected',
-        'version' => config('app.version', '1.0.0'),
-    ]);
-});
 
 /*
 |--------------------------------------------------------------------------
