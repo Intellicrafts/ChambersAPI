@@ -25,6 +25,7 @@ class NotificationController extends Controller
     public function userNotifications($userId)
     {
         $notifications = Notification::where('user_id', $userId)
+            ->where('status', 'unread')
             ->latest()
             ->paginate(20);
 

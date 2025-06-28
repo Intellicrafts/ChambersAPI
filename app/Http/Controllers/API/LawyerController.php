@@ -135,6 +135,7 @@ class LawyerController extends Controller
             // Add computed attributes
             $lawyer->average_rating = $lawyer->average_rating;
             $lawyer->total_reviews = $lawyer->total_reviews;
+            // UUID is automatically included via the appends property in the model
 
             return response()->json([
                 'success' => true,
@@ -283,7 +284,6 @@ class LawyerController extends Controller
 
     public function lawyer_with_details(Request $request): JsonResponse
     {
-        return response()->json(["status" => 200]);
         try {
             $query = Lawyer::query()
                 ->select('lawyers.*')

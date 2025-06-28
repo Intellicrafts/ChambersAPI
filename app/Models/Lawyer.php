@@ -6,10 +6,41 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Lawyer extends Model
 {
     use HasFactory;
+
+    /**
+     * Indicates if the model's ID is auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = false;
+
+    /**
+     * The data type of the auto-incrementing ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'string';
+    
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($model) {
+            if (!$model->id) {
+                $model->id = (string) Str::uuid();
+            }
+        });
+    }
 
     protected $fillable = [
         'full_name',
@@ -30,6 +61,15 @@ class Lawyer extends Model
 
     protected $hidden = [
         'password_hash',
+    ];
+    
+    /**
+     * The attributes that should be visible in arrays.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'uuid',
     ];
 
     protected function casts(): array
@@ -133,6 +173,16 @@ class Lawyer extends Model
         return $this->profile_picture_url 
             ? asset('storage/lawyers/' . $this->profile_picture_url)
             : asset('images/default-lawyer.png');
+    }
+    
+    /**
+     * Get the UUID attribute.
+     *
+     * @return string
+     */
+    public function getUuidAttribute(): string
+    {
+        return $this->id;
     }
 
     /**
