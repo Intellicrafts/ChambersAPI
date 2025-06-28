@@ -31,7 +31,7 @@ steps:
       - '--image'
       - 'gcr.io/$PROJECT_ID/chambers-api:$COMMIT_SHA'
       - '--region'
-      - 'us-central1'
+      - '${_REGION}'
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
@@ -43,12 +43,22 @@ steps:
       - '0'
       - '--max-instances'
       - '10'
+      - '--set-env-vars'
+      - 'APP_ENV=production,APP_DEBUG=false,DB_CONNECTION=pgsql,DB_HOST=${_DB_HOST},DB_PORT=${_DB_PORT},DB_DATABASE=${_DB_DATABASE},DB_USERNAME=${_DB_USERNAME},DB_PASSWORD=${_DB_PASSWORD}'
+      - '--set-cloudsql-instances'
+      - '${_CLOUDSQL_CONNECTION_NAME}'
 
 images:
   - 'gcr.io/$PROJECT_ID/chambers-api:$COMMIT_SHA'
 
 substitutions:
-  _REGION: 'us-central1'
+  _REGION: 'asia-south1'
+  _DB_HOST: '34.100.232.139'
+  _DB_PORT: '5432'
+  _DB_DATABASE: 'chambers_api'
+  _DB_USERNAME: 'postgres'
+  _DB_PASSWORD: ''
+  _CLOUDSQL_CONNECTION_NAME: 'intellicrafts-dev:asia-south1:master-db'
 
 options:
   logging: CLOUD_LOGGING_ONLY
