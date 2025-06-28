@@ -44,8 +44,9 @@ ENV APACHE_LOG_DIR=/var/log/apache2
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# Install dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Update composer.lock and install dependencies
+RUN composer update --no-interaction && \
+    composer install --no-dev --optimize-autoloader --no-interaction
 
 # Generate application key if not exists
 RUN php artisan key:generate --force
