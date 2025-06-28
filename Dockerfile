@@ -28,6 +28,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy application files
 COPY . /var/www/html
 
+# Create .env file if it doesn't exist
+RUN if [ ! -f .env ]; then cp .env.example .env || echo "APP_KEY=" > .env; fi
+
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
@@ -44,9 +47,9 @@ ENV APACHE_LOG_DIR=/var/log/apache2
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# Update composer.lock and install dependencies
-RUN composer update --no-interaction && \
-    composer install --no-dev --optimize-autoloader --no-interaction
+# Update composer.lock and install dependencies with increased memory limit
+RUN php -d memory_limit=-1 /usr/bin/composer update --no-interaction && \
+    php -d memory_limit=-1 /usr/bin/composer install --no-dev --optimize-autoloader --no-interaction
 
 # Generate application key if not exists
 RUN php artisan key:generate --force

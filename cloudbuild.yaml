@@ -14,7 +14,7 @@ steps:
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
     id: 'build-image'
-    args: ['build', '--memory=2g', '--memory-swap=2g', '-t', 'gcr.io/$PROJECT_ID/chambers-api:$COMMIT_SHA', '.']
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/chambers-api:$COMMIT_SHA', '.']
 
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
