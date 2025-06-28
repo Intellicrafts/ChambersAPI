@@ -25,8 +25,17 @@ RUN docker-php-ext-install pdo_mysql pdo_pgsql pgsql mbstring exif pcntl bcmath 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy application files
-COPY . /var/www/html
+# Copy composer files first for better caching
+COPY composer.json composer.lock ./
+
+# Install dependencies with increased memory limit
+RUN php -d memory_limit=-1 /usr/bin/composer install --no-dev --optimize-autoloader --no-interaction --no-scripts --no-autoloader
+
+# Copy the rest of the application
+COPY . .
+
+# Generate optimized autoloader
+RUN php -d memory_limit=-1 /usr/bin/composer dump-autoload --no-dev --optimize
 
 # Create .env file if it doesn't exist
 RUN if [ ! -f .env ]; then cp .env.example .env || echo "APP_KEY=" > .env; fi
@@ -46,9 +55,6 @@ ENV APACHE_LOG_DIR=/var/log/apache2
 # Update Apache configuration
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
-
-# Install dependencies with increased memory limit
-RUN php -d memory_limit=-1 /usr/bin/composer install --no-dev --optimize-autoloader --no-interaction
 
 # Generate application key if not exists
 RUN php artisan key:generate --force
