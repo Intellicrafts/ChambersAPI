@@ -10,10 +10,6 @@ steps:
         echo "BUILD_ID=$BUILD_ID"
         echo "COMMIT_SHA=$COMMIT_SHA"
         echo "BRANCH_NAME=$BRANCH_NAME"
-        echo "Removing Google Cloud Storage dependencies..."
-        sed -i '/google\/cloud-storage/d' composer.json
-        sed -i '/superbalist\/flysystem-google-storage/d' composer.json
-        cat composer.json
 
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
