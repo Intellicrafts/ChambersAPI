@@ -1,7 +1,7 @@
 FROM php:8.2-apache
 
 # Set working directory
-WORKDIR /var/www/html
+WORKDIR /var/www/html/chamberapi
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -60,10 +60,10 @@ RUN chown -R www-data:www-data /var/www/html \
 
 # Configure Apache
 RUN a2enmod rewrite
-RUN sed -i 's/DocumentRoot \/var\/www\/html/DocumentRoot \/var\/www\/html\/public/g' /etc/apache2/sites-available/000-default.conf
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/chamberapi/public|g' /etc/apache2/sites-available/000-default.conf
 
 # Set environment variables
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/chamberapi/public
 ENV APACHE_LOG_DIR=/var/log/apache2
 
 # Enable Apache error display
