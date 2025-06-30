@@ -60,7 +60,7 @@ class UserController extends Controller
     $user->load([
         'appointments' => function ($query) {
             $query->with([
-                'lawyer:id,full_name,email,phone,specialization,profile_picture'
+                'lawyer:id,full_name,email,phone_number,specialization,profile_picture_url'
             ])
             ->orderBy('appointment_time', 'desc')
             ->take(5);
