@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -196,5 +197,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->user_type === self::USER_TYPE_ADMIN;
     }
 
-
+    /**
+     * Get the lawyer profile associated with the user
+     * This is used for business users who are also lawyers
+     */
+    public function lawyer(): HasOne
+    {
+        return $this->hasOne(Lawyer::class, 'email', 'email');
+    }
 }

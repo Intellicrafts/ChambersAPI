@@ -19,21 +19,21 @@ Route::get('/health', function () {
 });
 
 // Helper function to check database connection
-function try_connect_db() {
-    try {
-        \DB::connection()->getPdo();
-        return [
-            'connected' => true,
-            'name' => \DB::connection()->getDatabaseName(),
-            'driver' => \DB::connection()->getDriverName(),
-        ];
-    } catch (\Exception $e) {
-        return [
-            'connected' => false,
-            'error' => $e->getMessage(),
-        ];
-    }
-}
+// function try_connect_db() {
+//     try {
+//         \DB::connection()->getPdo();
+//         return [
+//             'connected' => true,
+//             'name' => \DB::connection()->getDatabaseName(),
+//             'driver' => \DB::connection()->getDriverName(),
+//         ];
+//     } catch (\Exception $e) {
+//         return [
+//             'connected' => false,
+//             'error' => $e->getMessage(),
+//         ];
+//     }
+// }
 
 // Sanctum CSRF cookie route - this is crucial for your frontend
 Route::get('/sanctum/csrf-cookie', function () {

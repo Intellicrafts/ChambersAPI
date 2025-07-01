@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
+use App\Models\User;
 
 class Lawyer extends Model
 {
@@ -196,5 +197,13 @@ class Lawyer extends Model
             ->where('is_booked', false)
             ->orderBy('start_time')
             ->get();
+    }
+    
+    /**
+     * Get the user associated with this lawyer profile
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'email', 'email');
     }
 }
