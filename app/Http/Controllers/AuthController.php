@@ -15,7 +15,6 @@ class AuthController extends Controller
     // Register
     public function register(Request $request)
     {
-         return response()->json($responseData)->setStatusCode(201, 'User registered successfully');die;
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -37,7 +36,7 @@ class AuthController extends Controller
         $lawyer = null;
         
         // Check if user type is business, then create lawyer entry
-        if ($request->account_type === 'business') {
+        if ($request->account_type === '2' || $request->account_type === 'business') {
             // Create a lawyer record with basic information
             $lawyer = new Lawyer();
             $lawyer->full_name = $request->name;
@@ -62,7 +61,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         // Prepare response data
-        $responseData = [
+        $response = [
             'access_token' => $token,
             'token_type' => 'Bearer',
             'message' => 'User registered successfully',
@@ -71,7 +70,7 @@ class AuthController extends Controller
         
         // Add lawyer data if business account
         if ($lawyer) {
-            $responseData['lawyer'] = [
+            $response['lawyer'] = [
                 'uuid' => $lawyer->id,
                 'full_name' => $lawyer->full_name,
                 'email' => $lawyer->email,
@@ -79,7 +78,7 @@ class AuthController extends Controller
             ];
         }
 
-        return response()->json($responseData)->setStatusCode(201, 'User registered successfully');
+        return response()->json($response)->setStatusCode(201, 'User registered successfully');
     }
 
     // Login

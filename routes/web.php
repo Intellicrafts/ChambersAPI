@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CommandController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -39,3 +40,12 @@ Route::get('/health', function () {
 Route::get('/sanctum/csrf-cookie', function () {
     return response()->json(['message' => 'CSRF cookie set']);
 })->middleware('web');
+
+// Command execution routes - protected by auth middleware
+Route::middleware('auth:sanctum')->group(function () {
+    // JSON API endpoint for command execution
+    Route::get('/api/run/{command?}', [CommandController::class, 'executeCommand'])->where('command', '.*');
+    
+    // Web view for command execution
+    Route::get('/run/{command?}', [CommandController::class, 'executeCommandView'])->where('command', '.*');
+});
