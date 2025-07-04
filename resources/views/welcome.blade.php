@@ -59,6 +59,14 @@
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-white mb-2">🔧 Bakil Backend Dashboard</h1>
             <p class="text-blue-100 text-lg">Real-time API Status & Performance Monitoring</p>
+            <div class="mt-4">
+                <a href="{{ url('/terminal') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-300 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Open Terminal
+                </a>
+            </div>
         </div>
 
         <!-- Main Status Card -->
@@ -182,8 +190,8 @@
                     { name: 'Health Check', url: '/api/health', method: 'GET' },
                     { name: 'Database', url: '/api/database/status', method: 'GET' }
                 ];
-                
-                this.responseData = [];
+
+                this.response = [];
                 this.chart = null;
                 this.init();
             }

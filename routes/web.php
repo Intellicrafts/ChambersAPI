@@ -41,11 +41,21 @@ Route::get('/sanctum/csrf-cookie', function () {
     return response()->json(['message' => 'CSRF cookie set']);
 })->middleware('web');
 
-// Command execution routes - protected by auth middleware
-Route::middleware('auth:sanctum')->group(function () {
-    // JSON API endpoint for command execution
-    Route::get('/api/run/{command?}', [CommandController::class, 'executeCommand'])->where('command', '.*');
-    
-    // Web view for command execution
-    Route::get('/run/{command?}', [CommandController::class, 'executeCommandView'])->where('command', '.*');
-});
+// Command execution routes - no authentication required
+// JSON API endpoint for command execution
+Route::get('/api/run/{command?}', [CommandController::class, 'executeCommand'])->where('command', '.*');
+Route::get('/api/run', [CommandController::class, 'executeCommand']);
+Route::post('/api/run', [CommandController::class, 'executeCommand']);
+
+// Web view for command execution
+Route::get('/run/{command?}', [CommandController::class, 'executeCommandView'])->where('command', '.*');
+Route::get('/run', [CommandController::class, 'executeCommandView']);
+
+// Pull from main branch - JSON API endpoint
+Route::get('/api/pull-main', [CommandController::class, 'pullFromMain']);
+
+// Pull from main branch - Web view
+Route::get('/pull-main', [CommandController::class, 'pullFromMainView']);
+
+// Interactive terminal interface
+Route::get('/terminal', [CommandController::class, 'terminal']);
