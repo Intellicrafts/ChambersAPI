@@ -19,9 +19,9 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://127.0.0.1:3000'],
+    'allowed_origins' => ['http://127.0.0.1:3000', 'https://intellicrafts.in', 'https://www.intellicrafts.in'],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => ['/^https:\/\/.*\.intellicrafts\.in$/'],
 
     'allowed_headers' => ['*'],
 
