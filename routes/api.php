@@ -15,7 +15,7 @@ use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\LawyerAdminController;
 use App\Http\Controllers\API\LawyerCaseController;
 
-/*
+ /*
 |--------------------------------------------------------------------------
 | HEALTH CHECK & SYSTEM ROUTES
 |--------------------------------------------------------------------------
