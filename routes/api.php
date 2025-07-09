@@ -15,7 +15,7 @@ use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\LawyerAdminController;
 use App\Http\Controllers\API\LawyerCaseController;
 
- /*
+/*
 |--------------------------------------------------------------------------
 | HEALTH CHECK & SYSTEM ROUTES
 |--------------------------------------------------------------------------
@@ -38,7 +38,21 @@ Route::get('/health', function () {
         'database' => $dbStatus ? 'connected' : 'disconnected',
         'version' => config('app.version', '1.0.0'),
     ]);
-});
+})->middleware('cors');
+
+// CORS test endpoint
+Route::get('/cors-test', function () {
+    return response()->json([
+        'message' => 'CORS is working!',
+        'timestamp' => now()->toIso8601String(),
+        'headers' => request()->headers->all()
+    ]);
+})->middleware('cors');
+
+// Options for CORS preflight
+Route::options('/cors-test', function () {
+    return response()->json(['status' => 'success'], 200);
+})->middleware('cors');
 
 /*
 |--------------------------------------------------------------------------
@@ -48,11 +62,11 @@ Route::get('/health', function () {
 
 Route::get('/sanctum/csrf-cookie', function () {
     return response()->json(['message' => 'CSRF cookie set']);
-})->middleware(['web']);
+})->middleware(['web', 'cors']);
 
 Route::options('/sanctum/csrf-cookie', function () {
     return response()->json(['status' => 'success'], 200);
-});
+})->middleware('cors');
 
 // Direct avatar upload routes for compatibility with frontend
 Route::middleware('auth:sanctum')->group(function () {
@@ -69,7 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
 | Routes that don't require authentication
 */
 
-Route::middleware(['throttle:10,1'])->group(function () {
+Route::middleware(['throttle:10,1', 'cors'])->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::options('/register', function () {
@@ -79,10 +93,10 @@ Route::middleware(['throttle:10,1'])->group(function () {
         return response()->json(['status' => 'success'], 200);
     });
 });
-Route::post('/logout', [AuthController::class, 'logout'])->middleware(['auth:sanctum']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware(['auth:sanctum', 'cors']);
 Route::options('/logout', function () {
     return response()->json(['status' => 'success'], 200);
-});
+})->middleware('cors');
 
 /*
 |--------------------------------------------------------------------------
